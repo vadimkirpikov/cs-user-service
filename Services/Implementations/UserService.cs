@@ -59,13 +59,13 @@ public class UserService(IUserRepository userRepository, IPasswordHasher passwor
         await userRepository.UpdateUserAsync(user);
     }
 
-    public async Task<IEnumerable<User>> GetSubscribersAsync(int userId)
+    public async Task<IEnumerable<User>> GetSubscribersAsync(int userId, int page, int pageSize)
     {
-        return await userRepository.GetSubscribersAsync(userId);
+        return await userRepository.GetSubscribersAsync(userId, page, pageSize);
     }
 
-    public async Task<IEnumerable<User>> GetSubscribedUsersAsync(int userId)
+    public async Task<IEnumerable<User>> GetSubscribedUsersAsync(int userId, int page, int pageSize)
     {
-        return await userRepository.GetSubscribedUsersAsync(userId);
+        return await userRepository.GetSubscribedUsersAsync(userId, page, pageSize);
     }
 }

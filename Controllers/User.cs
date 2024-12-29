@@ -36,19 +36,19 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok("Информация о пользователе обновлена");
     }
 
-    [HttpGet("{userId:int}/subscribers")]
+    [HttpGet("{userId:int}/subscribers/page/{page:int}/page-size/{pageSize:int}")]
     [CustomExceptionFilter]
-    public async Task<IActionResult> GetSubscribers([FromRoute] int userId)
+    public async Task<IActionResult> GetSubscribers([FromRoute] int userId,[FromRoute] int page, [FromRoute] int pageSize)
     {
-        var subscribers = await userService.GetSubscribersAsync(userId);
+        var subscribers = await userService.GetSubscribersAsync(userId, page, pageSize);
         return Ok(subscribers);
     }
 
-    [HttpGet("{userId:int}/subscribed")]
+    [HttpGet("{userId:int}/subscribed/page/{page:int}/page-size/{pageSize:int}")]
     [CustomExceptionFilter]
-    public async Task<IActionResult> GetSubscribedUsers([FromRoute] int userId)
+    public async Task<IActionResult> GetSubscribedUsers([FromRoute] int userId,[FromRoute] int page, [FromRoute] int pageSize)
     {
-        var subscribedUsers = await userService.GetSubscribedUsersAsync(userId);
+        var subscribedUsers = await userService.GetSubscribedUsersAsync(userId, page, pageSize);
         return Ok(subscribedUsers);
     }
 }
