@@ -1,4 +1,5 @@
-﻿using CsApi.Models.Domain;
+﻿using AutoMapper;
+using CsApi.Models.Domain;
 using CsApi.Models.Dto;
 using CsApi.Repositories.Interfaces;
 using CsApi.Services.Interfaces;
@@ -7,9 +8,32 @@ using Microsoft.AspNetCore.Identity;
 
 namespace CsApi.Services.Implementations;
 
-public class UserService(IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtUtils jwtUtils)
+public class UserService(IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtUtils jwtUtils, IMapper mapper)
     : IUserService
 {
+    private async Task<User> TryGetExistingUser(int id)
+    {
+        var user = await userRepository.GetUserById(id);
+        if (user == null)
+        {
+            throw new ArgumentException($"User with id: {id} was not found");
+        }
+        return user;
+    }
+    public async Task<UserToNotifyDto> GetUserToNotifyAsync(int id)
+    {
+        var user = await TryGetExistingUser(id);
+        var userToNotifyDto = mapper.Map<UserToNotifyDto>(user);
+        return userToNotifyDto;
+    }
+
+    public async Task<SentUserDto> GetUserToSendAsync(int id)
+    {
+        var user = await TryGetExistingUser(id);
+        var userToSendDto = mapper.Map<SentUserDto>(user);
+        return userToSendDto;
+    }
+
     public async Task RegisterUserAsync(RegisterDto registerDto)
     {
         var existingUser = await userRepository.GetUserByEmailAsync(registerDto.Email);
@@ -45,11 +69,7 @@ public class UserService(IUserRepository userRepository, IPasswordHasher passwor
 
     public async Task UpdateUserAsync(int userId, UpdateUserDto updateUserDto)
     {
-        var user = await userRepository.GetUserByIdAsync(userId);
-        if (user == null)
-        {
-            throw new KeyNotFoundException("Пользователь не найден");
-        }
+        var user = await TryGetExistingUser(userId);
         
         user.Name = updateUserDto.Name;
         user.Bio = updateUserDto.Bio;
@@ -59,13 +79,15 @@ public class UserService(IUserRepository userRepository, IPasswordHasher passwor
         await userRepository.UpdateUserAsync(user);
     }
 
-    public async Task<IEnumerable<User>> GetSubscribersAsync(int userId, int page, int pageSize)
+    public async Task<IEnumerable<SentUserDto>> GetSubscribersAsync(int userId, int page, int pageSize)
     {
-        return await userRepository.GetSubscribersAsync(userId, page, pageSize);
+        var users = await userRepository.GetSubscribersAsync(userId, page, pageSize);
+        return mapper.Map<IEnumerable<SentUserDto>>(users);
     }
 
-    public async Task<IEnumerable<User>> GetSubscribedUsersAsync(int userId, int page, int pageSize)
+    public async Task<IEnumerable<SentUserDto>> GetSubscribedUsersAsync(int userId, int page, int pageSize)
     {
-        return await userRepository.GetSubscribedUsersAsync(userId, page, pageSize);
+        var users = await userRepository.GetSubscribedUsersAsync(userId, page, pageSize);
+        return mapper.Map<IEnumerable<SentUserDto>>(users);
     }
 }

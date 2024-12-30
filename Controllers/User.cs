@@ -51,4 +51,20 @@ public class UserController(IUserService userService) : ControllerBase
         var subscribedUsers = await userService.GetSubscribedUsersAsync(userId, page, pageSize);
         return Ok(subscribedUsers);
     }
+
+    [HttpGet("full/{id:int}")]
+    [CustomExceptionFilter]
+    public async Task<IActionResult> GetUser([FromRoute] int id)
+    {
+        var result = await userService.GetUserToSendAsync(id);
+        return Ok(result);
+    }
+    
+    [HttpGet("notify/{id:int}")]
+    [CustomExceptionFilter]
+    public async Task<IActionResult> GetUserToNotify([FromRoute] int id)
+    {
+        var result = await userService.GetUserToNotifyAsync(id);
+        return Ok(result);
+    }
 }

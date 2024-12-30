@@ -8,6 +8,7 @@ public class User
     [EmailAddress]
     [MaxLength(50)]
     public required string Email { get; set; }
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public required string PasswordHash { get; set; }
     [MaxLength(50)]
     public required string Name { get; set; }

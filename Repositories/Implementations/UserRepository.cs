@@ -9,13 +9,13 @@ public class UserRepository(ApplicationDbContext context) : IUserRepository
 {
     public async Task<User?> GetUserByEmailAsync(string email)
     {
-        return await context.Users.SingleOrDefaultAsync(u => u!.Email == email);
+        return await context.Users.SingleOrDefaultAsync(u => u.Email == email);
     }
 
     public async Task<User?> GetUserByIdAsync(int id)
     {
         return await context.Users
-            .FirstOrDefaultAsync(u => u!.Id == id);
+            .FirstOrDefaultAsync(u => u.Id == id);
     }
 
     public async Task CreateUserAsync(User user)

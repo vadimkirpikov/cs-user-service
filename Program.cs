@@ -1,3 +1,4 @@
+using CsApi.Mappers;
 using CsApi.Utils.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +31,7 @@ builder.Services.AddSwaggerGen(options =>
     })
     .AddControllers();
 
+builder.Services.AddAutoMapper(typeof(UserMapper));
 builder.AddDb().AddAuthentication().InjectDependencies();
 
 var app = builder.Build();
