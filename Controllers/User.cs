@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CsApi.Controllers;
 
-[Authorize]
+
 [ApiController]
 [Route("api/v1/users")]
 public class UserController(IUserService userService) : ControllerBase
@@ -28,6 +28,7 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(new { Token = token });
     }
 
+    [Authorize]
     [HttpPut("{userId:int}")]
     [CustomExceptionFilter]
     public async Task<IActionResult> UpdateUser([FromRoute] int userId, [FromBody] UpdateUserDto updateUserDto)
@@ -36,6 +37,7 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok("Информация о пользователе обновлена");
     }
 
+    [Authorize]
     [HttpGet("{userId:int}/subscribers/page/{page:int}/page-size/{pageSize:int}")]
     [CustomExceptionFilter]
     public async Task<IActionResult> GetSubscribers([FromRoute] int userId,[FromRoute] int page, [FromRoute] int pageSize)
@@ -43,7 +45,8 @@ public class UserController(IUserService userService) : ControllerBase
         var subscribers = await userService.GetSubscribersAsync(userId, page, pageSize);
         return Ok(subscribers);
     }
-
+    
+    [Authorize]
     [HttpGet("{userId:int}/subscribed/page/{page:int}/page-size/{pageSize:int}")]
     [CustomExceptionFilter]
     public async Task<IActionResult> GetSubscribedUsers([FromRoute] int userId,[FromRoute] int page, [FromRoute] int pageSize)
@@ -52,6 +55,7 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(subscribedUsers);
     }
 
+    [Authorize]
     [HttpGet("full/{id:int}")]
     [CustomExceptionFilter]
     public async Task<IActionResult> GetUser([FromRoute] int id)

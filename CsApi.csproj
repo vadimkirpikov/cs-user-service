@@ -16,6 +16,8 @@
         <PackageReference Include="Moq" Version="4.20.72" />
         <PackageReference Include="Npgsql" Version="8.0.6" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+        <PackageReference Include="prometheus-net" Version="8.2.1" />
+        <PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
         <PackageReference Include="xunit" Version="2.9.2" />
     </ItemGroup>
