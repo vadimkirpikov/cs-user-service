@@ -18,6 +18,9 @@ public class User
     public required DateTime? BirthDate { get; set; }
     [MaxLength(30)]
     public required string? Location { get; set; }
+    
+    [MaxLength(1000)]
+    public required string DeviceToken { get; set; }
     public bool IsActive { get; set; }
     
     public ICollection<Subscription> Subscriptions { get; set; }

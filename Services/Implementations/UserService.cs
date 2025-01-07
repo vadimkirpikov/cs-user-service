@@ -52,7 +52,8 @@ public class UserService(IUserRepository userRepository, IPasswordHasher passwor
             BirthDate = registerDto.BirthDate,
             Location = registerDto.Location,
             Bio = registerDto.Bio,
-            IsActive = registerDto.IsActive
+            IsActive = registerDto.IsActive,
+            DeviceToken = registerDto.DeviceToken,
         };
         await userRepository.CreateUserAsync(newUser);
     }

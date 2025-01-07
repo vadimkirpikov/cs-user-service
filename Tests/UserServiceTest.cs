@@ -34,7 +34,8 @@ public class UserServiceTests
         var registerDto = new RegisterDto
         {
             Name = "TestName", Email = "test@example.com", Password = "password", Location = "TestLocation",
-            BirthDate = DateTime.Now.AddYears(-20)
+            BirthDate = DateTime.Now.AddYears(-20),
+            DeviceToken = "123456"
         };
         _mockRepository
             .Setup(repo => repo.GetUserByEmailAsync(registerDto.Email))
@@ -44,7 +45,8 @@ public class UserServiceTests
                 PasswordHash = "TestHash",
                 Name = registerDto.Name,
                 BirthDate = registerDto.BirthDate,
-                Location = registerDto.Location
+                Location = registerDto.Location,
+                DeviceToken = registerDto.DeviceToken
             });
 
         var exception =
@@ -63,7 +65,8 @@ public class UserServiceTests
             BirthDate = new DateTime(2000, 1, 1),
             Location = "Earth",
             Bio = "Test Bio",
-            IsActive = true
+            IsActive = true,
+            DeviceToken = "DeviceToken"
         };
         _mockRepository
             .Setup(repo => repo.GetUserByEmailAsync(registerDto.Email))
@@ -108,6 +111,7 @@ public class UserServiceTests
             Name = "TestName",
             BirthDate = DateTime.Now.AddYears(-20),
             Location = "TestLocation",
+            DeviceToken = "dfjlkfjklfk"
         };
 
         _mockRepository
@@ -132,6 +136,7 @@ public class UserServiceTests
             Name = "TestName",
             BirthDate = DateTime.Now.AddYears(-20),
             Location = "TestLocation",
+            DeviceToken = "dk;aldk"
         };
         var expectedToken = "jwt_token";
 

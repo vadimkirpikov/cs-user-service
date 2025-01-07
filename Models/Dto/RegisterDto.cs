@@ -21,6 +21,8 @@ public class RegisterDto
     
     [MaxLength(1000)]
     public string? Bio { get; set; }
+    
+    public required string DeviceToken { get; set; }
 
     public bool IsActive { get; set; } = true;
 }
