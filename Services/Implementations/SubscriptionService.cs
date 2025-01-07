@@ -15,9 +15,13 @@ public class SubscriptionService(ISubscriptionRepository subscriptionRepository)
     public async Task AddSubscriptionAsync(SubscriptionDto subscriptionDto)
     {
         var existingSubscription = await subscriptionRepository.GetSubscriptionAsync(subscriptionDto.SubscriberId, subscriptionDto.SubscribedUserId);
+        if (subscriptionDto.SubscribedUserId == subscriptionDto.SubscriberId)
+        {
+            throw new ArgumentException("User cannot subscribe to himself");
+        }
         if (existingSubscription != null)
         {
-            throw new ArgumentException($"Пользователь с id {subscriptionDto.SubscriberId} уже подписан на пользователя с id {subscriptionDto.SubscribedUserId}");
+            throw new ArgumentException($"User with id {subscriptionDto.SubscriberId} already subscribed to user with id {subscriptionDto.SubscribedUserId}");
         }
         var subscription = new Subscription
         {
@@ -33,7 +37,7 @@ public class SubscriptionService(ISubscriptionRepository subscriptionRepository)
         var subscription = await subscriptionRepository.GetSubscriptionAsync(subscriberId, subscribedUserId);
         if (subscription == null)
         {
-            throw new ArgumentException($"Пользователь с id {subscriberId} не подписан на пользователя с id {subscribedUserId}");
+            throw new ArgumentException($"User with id {subscriberId} didn't subscribe to user with id {subscribedUserId}");
         }
         await subscriptionRepository.RemoveSubscriptionAsync(subscription);
     }

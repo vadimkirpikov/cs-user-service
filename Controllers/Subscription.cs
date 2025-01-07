@@ -1,4 +1,5 @@
-﻿using CsApi.Filters;
+﻿using System.Security.Claims;
+using CsApi.Filters;
 using CsApi.Models.Dto;
 using CsApi.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -22,19 +23,21 @@ public class SubscriptionController(ISubscriptionService subscriptionService) : 
         return Ok(subscription);
     }
     
-    [HttpPost]
+    [HttpPost("subscribe/{id:int}")]
     [CustomExceptionFilter]
-    public async Task<IActionResult> AddSubscription([FromBody] SubscriptionDto subscriptionDto)
+    public async Task<IActionResult> AddSubscription([FromRoute] int id)
     {
-        await subscriptionService.AddSubscriptionAsync(subscriptionDto);
+        var subscriberId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        await subscriptionService.AddSubscriptionAsync(new SubscriptionDto { SubscriberId = subscriberId, SubscribedUserId = id });
         return Ok("Подписка успешно добавлена");
     }
 
-    [HttpDelete("{subscriberId:int}/{subscribedUserId:int}")]
+    [HttpDelete("unsubscribe/{id:int}")]
     [CustomExceptionFilter]
-    public async Task<IActionResult> RemoveSubscription([FromRoute] int subscriberId, [FromRoute] int subscribedUserId)
+    public async Task<IActionResult> RemoveSubscription([FromRoute] int id)
     {
-        await subscriptionService.RemoveSubscriptionAsync(subscriberId, subscribedUserId);
+        var subscriberId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+        await subscriptionService.RemoveSubscriptionAsync(subscriberId, id);
         return Ok("Подписка успешно удалена");
     }
 }

@@ -1,4 +1,5 @@
-﻿using CsApi.Filters;
+﻿using System.Security.Claims;
+using CsApi.Filters;
 using CsApi.Models.Domain;
 using CsApi.Models.Dto;
 using CsApi.Services.Interfaces;
@@ -29,10 +30,11 @@ public class UserController(IUserService userService) : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("{userId:int}")]
+    [HttpPut("update")]
     [CustomExceptionFilter]
-    public async Task<IActionResult> UpdateUser([FromRoute] int userId, [FromBody] UpdateUserDto updateUserDto)
+    public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto updateUserDto)
     {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
         await userService.UpdateUserAsync(userId, updateUserDto);
         return Ok("Информация о пользователе обновлена");
     }
