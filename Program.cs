@@ -29,12 +29,21 @@ builder.Services.AddSwaggerGen(options =>
             }
         });
     })
-    .AddControllers();
+    .AddControllers().Services
+    .AddCors(options =>
+        {
+            options.AddDefaultPolicy(b =>
+            {
+                b.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        })
+    .AddAutoMapper(typeof(UserMapper));
 
-builder.Services.AddAutoMapper(typeof(UserMapper));
-builder.AddDb().AddAuthentication().InjectDependencies();
+var app = builder.AddDb().AddAuthentication().InjectDependencies().Build();
 
-var app = builder.Build();
+app.UseCors();
 
 if (app.Environment.IsDevelopment())
 {
