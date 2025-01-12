@@ -73,4 +73,13 @@ public class UserController(IUserService userService) : ControllerBase
         var result = await userService.GetUserToNotifyAsync(id);
         return Ok(result);
     }
+    
+    [Authorize]
+    [HttpGet("page/{page:int}/page-size/{pageSize:int}")]
+    [CustomExceptionFilter]
+    public async Task<IActionResult> GetUserPage([FromRoute] int page, [FromRoute] int pageSize)
+    {
+        var result = await userService.GetUsersAsync(page, pageSize);
+        return Ok(result);
+    }
 }
