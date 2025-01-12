@@ -13,12 +13,20 @@ public class UserService(IUserRepository userRepository, IPasswordHasher passwor
 {
     private async Task<User> TryGetExistingUser(int id)
     {
-        var user = await userRepository.GetUserById(id);
+        var user = await userRepository.GetUserByIdAsync(id);
         if (user == null)
         {
             throw new ArgumentException($"User with id: {id} was not found");
         }
         return user;
+    }
+
+    private void CheckPageAndPageSize(int page, int pageSize)
+    {
+        if (page < 1 || pageSize < 1 || page > 1000)
+        {
+            throw new ArgumentException($"Page must be grater than 0 and page size must be between 1 and 1000");
+        }
     }
     public async Task<UserToNotifyDto> GetUserToNotifyAsync(int id)
     {
@@ -82,13 +90,22 @@ public class UserService(IUserRepository userRepository, IPasswordHasher passwor
 
     public async Task<IEnumerable<SentUserDto>> GetSubscribersAsync(int userId, int page, int pageSize)
     {
+        CheckPageAndPageSize(page, pageSize);
         var users = await userRepository.GetSubscribersAsync(userId, page, pageSize);
         return mapper.Map<IEnumerable<SentUserDto>>(users);
     }
 
     public async Task<IEnumerable<SentUserDto>> GetSubscribedUsersAsync(int userId, int page, int pageSize)
     {
+        CheckPageAndPageSize(page, pageSize);
         var users = await userRepository.GetSubscribedUsersAsync(userId, page, pageSize);
         return mapper.Map<IEnumerable<SentUserDto>>(users);
+    }
+
+    public async Task<IEnumerable<UserToNotifyDto>> GetUsersAsync(int page, int pageSize)
+    {
+        CheckPageAndPageSize(page, pageSize);
+        var users = await userRepository.GetUsersAsync(page, pageSize);
+        return mapper.Map<IEnumerable<UserToNotifyDto>>(users);
     }
 }

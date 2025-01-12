@@ -158,7 +158,7 @@ public class UserServiceTests
     [Fact]
     public async Task UpdateUserAsync_ShouldThrowException_WhenUserNotFound()
     {
-        var userId = 1;
+        const int userId = 1;
         var updateUserDto = new UpdateUserDto
         {
             Name = "Updated Name",
@@ -172,5 +172,14 @@ public class UserServiceTests
 
         var exception =
             await Assert.ThrowsAsync<ArgumentException>(() => _service.UpdateUserAsync(userId, updateUserDto));
+    }
+
+    [Theory]
+    [InlineData(0, 10)]
+    [InlineData(1, 0)]
+    [InlineData(1, 1001)]
+    public async Task GetUsers_ShouldThrowException_WhenPageOrPageSizeAreInvalid(int pageSize, int page)
+    {
+        await Assert.ThrowsAsync<ArgumentException>(() => _service.GetUsersAsync(page, pageSize));
     }
 }

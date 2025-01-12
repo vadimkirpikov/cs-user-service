@@ -22,8 +22,8 @@ public class SubscriptionServiceTests
     [Fact]
     public async Task GetSubscriptionAsync_ShouldReturnSubscription_WhenExists()
     {
-        var subscriberId = 1;
-        var subscribedUserId = 2;
+        const int subscriberId = 1;
+        const int subscribedUserId = 2;
         var expectedSubscription = new Subscription
         {
             SubscriberId = subscriberId,
@@ -55,7 +55,7 @@ public class SubscriptionServiceTests
         
         var exception = await Assert.ThrowsAsync<ArgumentException>(
             () => _service.AddSubscriptionAsync(subscriptionDto));
-        Assert.Equal($"Пользователь с id {subscriptionDto.SubscriberId} уже подписан на пользователя с id {subscriptionDto.SubscribedUserId}", exception.Message);
+        Assert.Equal($"User with id {subscriptionDto.SubscriberId} already subscribed to user with id {subscriptionDto.SubscribedUserId}", exception.Message);
     }
 
     [Fact]
@@ -76,22 +76,22 @@ public class SubscriptionServiceTests
     [Fact]
     public async Task RemoveSubscriptionAsync_ShouldThrowArgumentException_WhenSubscriptionDoesNotExist()
     {
-        var subscriberId = 1;
-        var subscribedUserId = 2;
+        const int subscriberId = 1;
+        const int subscribedUserId = 2;
         _mockRepository
             .Setup(repo => repo.GetSubscriptionAsync(subscriberId, subscribedUserId))
             .ReturnsAsync((Subscription?)null);
         
         var exception = await Assert.ThrowsAsync<ArgumentException>(
             () => _service.RemoveSubscriptionAsync(subscriberId, subscribedUserId));
-        Assert.Equal($"Пользователь с id {subscriberId} не подписан на пользователя с id {subscribedUserId}", exception.Message);
+        Assert.Equal($"User with id {subscriberId} didn't subscribe to user with id {subscribedUserId}", exception.Message);
     }
 
     [Fact]
     public async Task RemoveSubscriptionAsync_ShouldRemoveSubscription_WhenExists()
     {
-        var subscriberId = 1;
-        var subscribedUserId = 2;
+        const int subscriberId = 1;
+        const int subscribedUserId = 2;
         var existingSubscription = new Subscription
         {
             SubscriberId = subscriberId,

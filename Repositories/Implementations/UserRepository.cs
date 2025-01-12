@@ -34,23 +34,31 @@ public class UserRepository(ApplicationDbContext context) : IUserRepository
     {
         return await context.Users.SingleOrDefaultAsync(u => u!.Id == userId);
     }
-    
+
     public async Task<IEnumerable<User>> GetSubscribersAsync(int userId, int page, int pageSize)
     {
         return await context.Subscriptions
             .Where(s => s.SubscribedUserId == userId)
             .Select(s => s.Subscriber)
-            .Skip((page-1)*pageSize)
+            .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
     }
-    
+
     public async Task<IEnumerable<User>> GetSubscribedUsersAsync(int userId, int page, int pageSize)
     {
         return await context.Subscriptions
             .Where(s => s.SubscriberId == userId)
             .Select(s => s.SubscribedUser)
-            .Skip((page-1)*pageSize)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<User>> GetUsersAsync(int page, int pageSize)
+    {
+        return await context.Users
+            .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
     }
